@@ -95,6 +95,10 @@ function cookInfo (rawInfo) {
   }
   delete info.guard
 
+  if (info.timing === '-') {
+    delete info.timing
+  }
+
   info.cardSkills = info.cardSkill.split('\n').filter(function (skill) {
     return skill
   })
