@@ -21,8 +21,6 @@ function cookInfo (rawInfo) {
   for (var prop in rawInfo) {
     info[prop] = rawInfo[prop]
     if (prop === 'name') {
-      info.name_zh_CN = rawInfo.name
-      info.name_en = rawInfo.name
     } else if (prop === 'pid') {
       info.cid = rawInfo.pid
     }
@@ -78,6 +76,18 @@ function cookInfo (rawInfo) {
     info.power = toInt(info.power)
   }
 
+  if (info.cardType === 'LRIG') {
+    if (info.coin === '-') {
+      info.coin = 0
+    } else {
+      info.coin = toInt(info.coin)
+    }
+  } else {
+    if (info.coin) {
+      debugger
+    }
+  }
+
   if (/限定$/.test(info.limiting)) {
     info.limiting = info.limiting.replace(/限定$/,'')
   } else if (info.limiting === '-') {
@@ -113,11 +123,10 @@ function cookInfo (rawInfo) {
   }
 
   info.cardText = ''
-  info.cardText_zh_CN = ''
-  info.cardText_en = ''
   info.lifeBurst = ''
   info.cardTexts.forEach(function (text,i,arr) {
     if (!text) debugger
+    text = text.replace(/^ライフバースト：/, '【ライフバースト】：')
     if (text.indexOf('【ライフバースト】：') === 0) {
       if (info.lifeBurst) debugger
       info.lifeBurst = text.replace(/^【ライフバースト】：/,'')
