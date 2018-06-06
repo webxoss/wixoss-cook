@@ -6,6 +6,7 @@ var cardTypeMap = {
   'アーツ': 'ARTS',
   'スペル': 'SPELL',
   'レゾナ': 'RESONA',
+  'キー': 'KEY',
 }
 var colorMap = {
   '白': 'white',
@@ -76,7 +77,7 @@ function cookInfo (rawInfo) {
     info.power = toInt(info.power)
   }
 
-  if (info.cardType === 'LRIG') {
+  if (info.cardType === 'LRIG' || info.cardType === 'KEY') {
     if (info.coin === '-') {
       info.coin = 0
     } else {
@@ -130,6 +131,8 @@ function cookInfo (rawInfo) {
     if (text.indexOf('【ライフバースト】：') === 0) {
       if (info.lifeBurst) debugger
       info.lifeBurst = text.replace(/^【ライフバースト】：/,'')
+    } else if (text.indexOf('《キーアイコン》') === 0) {
+      info.format = 'KEYSET'
     } else {
       if (info.cardText) debugger
       info.cardText = text
@@ -172,7 +175,7 @@ function setCost (info) {
   info.costColorless = 0
   var costStr
   if ((info.growCost === '-') && (info.cost !== '-')) {
-    if (info.cardType !== 'ARTS' && info.cardType !== 'SPELL') {
+    if (info.cardType !== 'ARTS' && info.cardType !== 'SPELL' && info.cardType !== 'KEY') {
       debugger
     }
     costStr = info.cost
@@ -196,6 +199,7 @@ function setCost (info) {
         debugger
       }
       var colorCostMap = {
+        'コイン': 'coin',
         '白': 'costWhite',
         '黒': 'costBlack',
         '赤': 'costRed',
